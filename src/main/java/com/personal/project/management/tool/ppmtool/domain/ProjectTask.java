@@ -13,7 +13,7 @@ public class ProjectTask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(updatable = false)
+    @Column(updatable = false, unique = true)
     private String projectSequence;
     @NotBlank(message = "Please include a project summary")
     private String summary;
@@ -28,7 +28,7 @@ public class ProjectTask {
     private Backlog backlog;
 
     @Column(updatable = false)
-    private String projectIdentifer;
+    private String projectIdentifier;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @Column(updatable = false)
     private Date createdAt;
@@ -94,12 +94,12 @@ public class ProjectTask {
         this.dueDate = dueDate;
     }
 
-    public String getProjectIdentifer() {
-        return projectIdentifer;
+    public String getProjectIdentifier() {
+        return projectIdentifier;
     }
 
-    public void setProjectIdentifer(String projectIdentifer) {
-        this.projectIdentifer = projectIdentifer;
+    public void setProjectIdentifier(String projectIdentifier) {
+        this.projectIdentifier = projectIdentifier;
     }
 
     public Date getCreatedAt() {
@@ -142,7 +142,7 @@ public class ProjectTask {
                 ", status='" + status + '\'' +
                 ", priority=" + priority +
                 ", dueDate=" + dueDate +
-                ", projectIdentifer='" + projectIdentifer + '\'' +
+                ", projectIdentifier='" + projectIdentifier + '\'' +
                 ", createAt=" + createdAt +
                 ", updateAt=" + updatedAt +
                 '}';
