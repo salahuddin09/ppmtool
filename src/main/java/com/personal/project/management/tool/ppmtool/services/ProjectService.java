@@ -4,6 +4,7 @@ import com.personal.project.management.tool.ppmtool.domain.Backlog;
 import com.personal.project.management.tool.ppmtool.domain.Project;
 import com.personal.project.management.tool.ppmtool.domain.User;
 import com.personal.project.management.tool.ppmtool.exceptions.ProjectIdException;
+import com.personal.project.management.tool.ppmtool.exceptions.ProjectNotFoundException;
 import com.personal.project.management.tool.ppmtool.repositories.BacklogRepository;
 import com.personal.project.management.tool.ppmtool.repositories.ProjectRepository;
 import com.personal.project.management.tool.ppmtool.repositories.UserRepository;
@@ -47,29 +48,32 @@ public class ProjectService {
         }
     }
 
-    public Project findProjectByIdentifier(String projectId){
+    public Project findProjectByIdentifier(String projectId, String username){
+
+        //Only want to return the project if the user looking for it is the owner
 
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
-        if(project == null) {
+        if(project == null){
             throw new ProjectIdException("Project ID '"+projectId+"' does not exist");
+
+        }
+
+        if(!project.getProjectLeader().equals(username)){
+            throw new ProjectNotFoundException("Project not found in your account");
         }
 
         return project;
     }
 
-    public Iterable<Project> findAllProjects(){
-        return projectRepository.findAll();
+    public Iterable<Project> findAllProjects(String username){
+        return projectRepository.findAllByProjectLeader(username);
     }
 
-    public void deleteProjectByIdentifier(String projectid){
-        Project project = projectRepository.findByProjectIdentifier(projectid.toUpperCase());
+    public void deleteProjectByIdentifier(String projectid, String username){
 
-        if(project == null){
-            throw  new  ProjectIdException("Cannot Project with ID '"+projectid+"'. This project does not exist");
-        }
 
-        projectRepository.delete(project);
+        projectRepository.delete(findProjectByIdentifier(projectid, username));
     }
 
 }
